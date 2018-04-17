@@ -24,7 +24,7 @@ import javax.swing.Timer;
 import javafx.scene.input.KeyCode;
 
 public class GameBoard extends JPanel implements ActionListener {
-
+	
 	private Spaceship spaceShip;
 	private List<Missile> missileList;
 	private final int DELAY = 10; 
@@ -56,7 +56,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		configPauseScreen();
 		
 		//Here we initialize the sprite we are using
-		spaceShip = new Spaceship("C:\\Users\\Jonas\\Pictures\\spaceship.png", 60, 40);
+		spaceShip = new Spaceship("spaceship.png", 60, 40);
 		missileList = new ArrayList<Missile> ();
 		
 		//The timer will trigger an action event every DELAY ms
@@ -133,7 +133,7 @@ public class GameBoard extends JPanel implements ActionListener {
 	
 	private void fire() {
 		
-		Missile e = new Missile("C:\\Users\\Jonas\\Pictures\\missile.png", spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
+		Missile e = new Missile("missile.png", spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
 		
 		missileList.add(e);
 		
