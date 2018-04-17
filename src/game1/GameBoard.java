@@ -10,16 +10,23 @@ import java.awt.Point;
 import java.awt.PointerInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import javafx.scene.input.KeyCode;
+
 public class GameBoard extends JPanel implements ActionListener {
 
 	private Spaceship spaceShip;
+	private List<Missile> missileList;
 	private final int DELAY = 10; 
 	private JLabel pauseScreen;
 			
@@ -31,9 +38,11 @@ public class GameBoard extends JPanel implements ActionListener {
 	//This method is only called once, when the GameBoard is constructed over in GameInterface
 	private void initBoard() {
 
-		//The MouseListeners allow the program to do things when mouse events occur, like entering or exiting a component.
+		//The MouseListeners allow the program to do things when mouse events occur, like entering or exiting a component
 		addMouseListener(new MAdapter());
 		addMouseMotionListener(new MAdapter());
+		
+		addKeyListener(new KAdapter());
 		
 		//These set attributes of the JPanel
 		setFocusable(true);
@@ -48,6 +57,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		
 		//Here we initialize the sprite we are using
 		spaceShip = new Spaceship("C:\\Users\\Jonas\\Pictures\\spaceship.png", 60, 40);
+		missileList = new ArrayList<Missile> ();
 		
 		//The timer will trigger an action event every DELAY ms
 		Timer timer = new Timer(DELAY, this);	
@@ -73,6 +83,15 @@ public class GameBoard extends JPanel implements ActionListener {
 
 		g2d.drawImage(spaceShip.getImage(), (int) spaceShip.getX(), 
 				(int) spaceShip.getY(), this);
+		
+		if(!missileList.isEmpty())
+			
+			for(int i = 0; i < missileList.size(); i++) {
+			
+				Missile missile = missileList.get(i);
+				g2d.drawImage(missile.getImage(), (int) missile.getX(), (int) missile.getY(), this);
+			}
+		
 	}
 
 	//Called every DELAY ms; controlled by the Timer
@@ -93,9 +112,33 @@ public class GameBoard extends JPanel implements ActionListener {
 		spaceShip.calcDxDy(getMouseX(), getMouseY());		
 		spaceShip.move();
 		
+		if(!missileList.isEmpty())
+			
+			for(int i = 0; i < missileList.size(); i++) {
+				
+				Missile missile = missileList.get(i);
+				
+				if(missile.getX() < this.getX() || missile.getX() > this.getX() + this.getWidth() || missile.getY() < this.getY() || missile.getY() > this.getY() + this.getHeight())
+					
+					missileList.remove(i);
+				
+				else 
+					
+					missileList.get(i).move();
+			}
+		
 		//Repaint the entire canvas to erase the previous sprite image
 		repaint();    
-	}    
+	}  
+	
+	private void fire() {
+		
+		Missile e = new Missile("C:\\Users\\Jonas\\Pictures\\missile.png", spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
+		
+		missileList.add(e);
+		
+		System.out.println("Missile Fired.");
+	}
 
 	//Gets the mouse position for use in sprite movement calculations
 	private double getMouseX() {
@@ -115,7 +158,7 @@ public class GameBoard extends JPanel implements ActionListener {
 	}
 
 	//Checks if the mouse is currently on the board 
-	public boolean mouseOnBoard() {
+	private boolean mouseOnBoard() {
 	
 		if((this.getX() < getMouseX() && getMouseX() < this.getX() + this.getWidth()) && (this.getY() < getMouseY() && getMouseY() < this.getY() + this.getHeight())) {
 			
@@ -132,22 +175,6 @@ public class GameBoard extends JPanel implements ActionListener {
 	private class MAdapter extends MouseAdapter {
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
-
-			//fire();
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-
-		}
-
-		@Override
 		public void mouseEntered(MouseEvent e) {
 			
 			pauseScreen.setVisible(false);
@@ -158,17 +185,20 @@ public class GameBoard extends JPanel implements ActionListener {
 
 			pauseScreen.setVisible(true);
 		}
-
-		@Override
-		public void mouseMoved(MouseEvent e) {
 		
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent e) {
-
-		}
+	}
+	
+	private class KAdapter extends KeyAdapter {
 		
+		@Override
+		public void keyPressed(KeyEvent e) {
+			
+			if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+				
+				fire();
+			}
+			
+		}
 	}
 
 }

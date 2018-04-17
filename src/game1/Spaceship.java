@@ -3,12 +3,11 @@ package game1;
 public class Spaceship extends MovingSprite {
 
 	//Should be around 1-4 for practical purposes
-	private final double SPEED_MULTIPLIER = 2;
+	private final double SPEED_MULTIPLIER = 1.5;
 	
 	public Spaceship(String filename, double x, double y) {
 
 		super(filename, x, y);
-		
 		
 	}
 	
