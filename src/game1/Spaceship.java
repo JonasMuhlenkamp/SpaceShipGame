@@ -14,7 +14,7 @@ public class Spaceship extends MovingSprite {
 	public void calcDxDy(double mouseX, double mouseY) {
 
 		//If we are hovering over the center of the sprite, we stop moving
-		if((mouseX < (x + (w / 2.0) + 5) && mouseX > (x + (w / 2.0) - 5)) && (mouseY < (y + (h / 2.0) + 5) && mouseY > (y + (h / 2.0) - 5))) {		
+		if((mouseX < (x + (w / 2.0) + 10) && mouseX > (x + (w / 2.0) - 10)) && (mouseY < (y + (h / 2.0) + 10) && mouseY > (y + (h / 2.0) - 10))) {		
 
 			dx = 0;
 			dy = 0;

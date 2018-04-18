@@ -136,8 +136,6 @@ public class GameBoard extends JPanel implements ActionListener {
 		Missile e = new Missile("missile.png", spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
 		
 		missileList.add(e);
-		
-		System.out.println("Missile Fired.");
 	}
 
 	//Gets the mouse position for use in sprite movement calculations
