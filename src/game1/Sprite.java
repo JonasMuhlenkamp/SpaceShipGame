@@ -1,11 +1,10 @@
 package game1;
 
 import java.awt.Image;
-//import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 
-public class MovingSprite {
+public class Sprite {
 
 	private Image image;
 	private String path;
@@ -14,12 +13,12 @@ public class MovingSprite {
 	protected int h;
 	protected double x;
 	protected double y;
-		
+	
 	protected double dx;
 	protected double dy;
 	
-	public MovingSprite(String filename, double x, double y) {
-
+	public Sprite(String filename, double x, double y) {
+		
 		this.x = x;
 		this.y = y;
 		
@@ -43,7 +42,7 @@ public class MovingSprite {
 		x += dx;
 		y += dy;   
 	}
-
+	
 	//Simple getter methods that return important attributes of the sprite
 	public double getX() {
 
@@ -69,5 +68,5 @@ public class MovingSprite {
 
 		return image;
 	}
-
+	
 }

@@ -14,10 +14,10 @@ public class GameInterface extends JFrame {
 		add(new GameBoard());
 				
 		setTitle("Spaceship Game!!!");
-		setSize(500, 500);
+		setSize(750, 750);
 
 		setLocation(100, 100);
-		setResizable(true);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 

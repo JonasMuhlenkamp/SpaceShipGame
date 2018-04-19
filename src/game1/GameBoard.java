@@ -56,7 +56,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		configPauseScreen();
 		
 		//Here we initialize the sprite we are using
-		spaceShip = new Spaceship("spaceship.png", 60, 40);
+		spaceShip = new Spaceship(60, 40);
 		missileList = new ArrayList<Missile> ();
 		
 		//The timer will trigger an action event every DELAY ms
@@ -127,13 +127,13 @@ public class GameBoard extends JPanel implements ActionListener {
 					missileList.get(i).move();
 			}
 		
-		//Repaint the entire canvas to erase the previous sprite image
+		//Repaint the entire canvas to erase the previous sprite images
 		repaint();    
 	}  
 	
 	private void fire() {
 		
-		Missile e = new Missile("missile.png", spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
+		Missile e = new Missile(spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
 		
 		missileList.add(e);
 	}

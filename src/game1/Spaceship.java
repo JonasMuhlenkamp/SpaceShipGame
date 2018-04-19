@@ -1,13 +1,13 @@
 package game1;
 
-public class Spaceship extends MovingSprite {
+public class Spaceship extends Sprite {
 
 	//Should be around 1-4 for practical purposes
-	private final double SPEED_MULTIPLIER = 1.5;
+	private final double SPEED_MULTIPLIER = 1.75;
 	
-	public Spaceship(String filename, double x, double y) {
+	public Spaceship(double x, double y) {
 
-		super(filename, x, y);
+		super("spaceship.png", x, y);
 		
 	}
 	
