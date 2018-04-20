@@ -18,11 +18,6 @@ public class Boulder extends Sprite {
 		
 	}
 
-	private void loadImage() {
-		
-		
-	}
-	
 	public void bounceDx() {
 		
 		dx *= -1.1;
@@ -31,6 +26,11 @@ public class Boulder extends Sprite {
 	public void bounceDy() {
 		
 		dy *= -1.1;
+	}
+	
+	public boolean hitSprite(Sprite sprite) {
+		
+		return x < sprite.getX() && x + w > sprite.getX() + sprite.getWidth() && y < sprite.getY() && y + h > sprite.getY() + sprite.getHeight();
 	}
 	
 }

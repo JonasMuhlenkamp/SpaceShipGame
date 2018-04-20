@@ -28,4 +28,10 @@ public class Spaceship extends Sprite {
 	
 	}
 	
+	public void hit() {
+		
+		System.out.println("Oh no, you've been hit!");
+		
+	}
+	
 }

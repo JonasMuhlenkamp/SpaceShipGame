@@ -133,7 +133,9 @@ public class GameBoard extends JPanel implements ActionListener {
 		//These loops run through any and all missiles/boulders and moves them accordingly
 		if(!missileList.isEmpty()) {
 
-			for(int i = 0; i < missileList.size(); i++) {
+			int i = 0;
+			
+			while(i < missileList.size()) {
 
 				Missile missile = missileList.get(i);
 
@@ -141,9 +143,12 @@ public class GameBoard extends JPanel implements ActionListener {
 
 					missileList.remove(i);
 
-				else 
-
+				else
+					
 					missile.move();
+				
+				i++;
+				
 			}
 			
 		}
@@ -164,7 +169,31 @@ public class GameBoard extends JPanel implements ActionListener {
 				if(boulder.getY() < this.getY() || boulder.getY() + boulder.getHeight() > this.getY() + this.getHeight())
 					
 					boulder.bounceDy();
+				
+				int j = 0;
+				
+				while(j < missileList.size()) {
+					
+					if(boulder.hitSprite(missileList.get(j))) {
+						
+						boulderList.remove(i);
+						missileList.remove(j);
+						
+						continue;
+					}
 
+					j++;
+						
+				}
+				
+//				if(boulder.hitSprite(spaceShip)) {
+//					
+//					boulderList.remove(i);
+//					spaceShip.hit();
+//					
+//					continue;
+//				}
+				
 				boulder.move();
 
 				i++;
@@ -199,7 +228,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		boulderList.add(b);
 		
 	}
-
+	
 	//Gets the mouse position for use in sprite movement calculations
 	private double getMouseX() {
 
@@ -252,7 +281,7 @@ public class GameBoard extends JPanel implements ActionListener {
 	private class KAdapter extends KeyAdapter {
 
 		@Override
-		public void keyPressed(KeyEvent e) {
+		public void keyReleased(KeyEvent e) {
 
 			if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 
