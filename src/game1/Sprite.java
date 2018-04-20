@@ -1,5 +1,6 @@
 package game1;
 
+import java.awt.Component;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -41,6 +42,16 @@ public class Sprite {
 
 		x += dx;
 		y += dy;   
+	}
+	
+	public boolean onScreen(Component component) {
+		
+		if(x < component.getX() || x + w > component.getX() + component.getWidth() || y < component.getY() || y + h > component.getY() + component.getHeight()) {
+			
+			return false;
+		}
+		
+		return true;
 	}
 	
 	//Simple getter methods that return important attributes of the sprite

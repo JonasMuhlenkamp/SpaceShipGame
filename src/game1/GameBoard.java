@@ -56,7 +56,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		//This method configures the 'Game Paused' JLabel
 		configPauseScreen();
 
-		//Here we initialize the sprite we are using for the spaceship and the boulder/missile arrays.
+		//Here we initialize the sprite we are using for the spaceship and the boulder/missile ArrayLists
 		spaceShip = new Spaceship(60, 40);
 		missileList = new ArrayList<Missile> ();
 		boulderList = new ArrayList<Boulder> ();
@@ -108,7 +108,7 @@ public class GameBoard extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		//If the mouse is over the component, we step (move and repaint)
+		//If the mouse is on the component, we step (move and repaint)
 		if(mouseOnBoard()) {
 
 			step();
@@ -120,6 +120,7 @@ public class GameBoard extends JPanel implements ActionListener {
 
 		count++;
 
+		//A new boulder is constructed every second (100 * DELAY = 1000ms = 1s)
 		if(count % 100 == 0) {
 
 			newBoulder();
@@ -129,19 +130,20 @@ public class GameBoard extends JPanel implements ActionListener {
 		spaceShip.calcDxDy(getMouseX(), getMouseY());		
 		spaceShip.move();
 
+		//These loops run through any and all missiles/boulders and moves them accordingly
 		if(!missileList.isEmpty()) {
 
 			for(int i = 0; i < missileList.size(); i++) {
 
 				Missile missile = missileList.get(i);
 
-				if(missile.getX() < this.getX() || missile.getX() > this.getX() + this.getWidth() || missile.getY() < this.getY() || missile.getY() > this.getY() + this.getHeight())
+				if(!missile.onScreen(this))
 
 					missileList.remove(i);
 
 				else 
 
-					missileList.get(i).move();
+					missile.move();
 			}
 			
 		}
@@ -154,13 +156,16 @@ public class GameBoard extends JPanel implements ActionListener {
 				
 				Boulder boulder = boulderList.get(i);
 
-				if(boulder.getX() < this.getX() || boulder.getX() > this.getX() + this.getWidth() || boulder.getY() < this.getY() || boulder.getY() > this.getY() + this.getHeight())
+				//Boulders bounce off the walls of the board rather than disappear
+				if(boulder.getX() < this.getX() || boulder.getX() + boulder.getWidth() > this.getX() + this.getWidth())
 
-					boulderList.remove(i);
+					boulder.bounceDx();
+					
+				if(boulder.getY() < this.getY() || boulder.getY() + boulder.getHeight() > this.getY() + this.getHeight())
+					
+					boulder.bounceDy();
 
-				else 
-
-					boulderList.get(i).move();
+				boulder.move();
 
 				i++;
 					
@@ -179,13 +184,20 @@ public class GameBoard extends JPanel implements ActionListener {
 		missileList.add(e);
 	}
 
+	//Create a new boulder sprite in a random location on the game board
 	private void newBoulder() {
 
 		Random rndm = new Random();
 
 		Boulder b = new Boulder(rndm.nextInt(this.getWidth()) + this.getX(), rndm.nextInt(this.getHeight()) + this.getY());
 
-		boulderList.add(b);		
+		//Error control loop for off-screen locations of boulders
+		while(!b.onScreen(this))
+		
+			b = new Boulder(rndm.nextInt(this.getWidth()) + this.getX(), rndm.nextInt(this.getHeight()) + this.getY());
+		
+		boulderList.add(b);
+		
 	}
 
 	//Gets the mouse position for use in sprite movement calculations
@@ -236,6 +248,7 @@ public class GameBoard extends JPanel implements ActionListener {
 
 	}
 
+	//The KeyAdapter is currently only being used for firing missiles
 	private class KAdapter extends KeyAdapter {
 
 		@Override

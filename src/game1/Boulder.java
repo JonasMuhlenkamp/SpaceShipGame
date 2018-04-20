@@ -12,6 +12,10 @@ public class Boulder extends Sprite {
 		
 		dx = -2 + rndm.nextInt(4); 
 		dy = -2 + rndm.nextInt(4);
+		
+		if(dx == 0) dx++;
+		if(dy == 0) dy++;
+		
 	}
 
 	private void loadImage() {
@@ -19,6 +23,14 @@ public class Boulder extends Sprite {
 		
 	}
 	
+	public void bounceDx() {
+		
+		dx *= -1.1;
+	}
 	
+	public void bounceDy() {
+		
+		dy *= -1.1;
+	}
 	
 }
