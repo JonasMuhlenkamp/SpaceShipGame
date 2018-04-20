@@ -26,7 +26,7 @@ public class GameBoard extends JPanel implements ActionListener {
 
 	private Spaceship spaceShip;
 	private List<Missile> missileList;
-	private List<Boulder> boulderList;
+	private List<Asteroid> asteroidList;
 	private final int DELAY = 10; 
 	private JLabel pauseScreen;
 	private int count = 0;
@@ -56,10 +56,10 @@ public class GameBoard extends JPanel implements ActionListener {
 		//This method configures the 'Game Paused' JLabel
 		configPauseScreen();
 
-		//Here we initialize the sprite we are using for the spaceship and the boulder/missile ArrayLists
+		//Here we initialize the sprite we are using for the spaceship and the asteroid/missile ArrayLists
 		spaceShip = new Spaceship(60, 40);
 		missileList = new ArrayList<Missile> ();
-		boulderList = new ArrayList<Boulder> ();
+		asteroidList = new ArrayList<Asteroid> ();
 
 		//The timer will trigger an action event every DELAY ms
 		Timer timer = new Timer(DELAY, this);	
@@ -94,12 +94,12 @@ public class GameBoard extends JPanel implements ActionListener {
 				g2d.drawImage(missile.getImage(), (int) missile.getX(), (int) missile.getY(), this);
 			}
 
-		if(!boulderList.isEmpty())
+		if(!asteroidList.isEmpty())
 
-			for(int i = 0; i < boulderList.size(); i++) {
+			for(int i = 0; i < asteroidList.size(); i++) {
 
-				Boulder boulder = boulderList.get(i);
-				g2d.drawImage(boulder.getImage(), (int) boulder.getX(), (int) boulder.getY(), this);
+				Asteroid asteroid = asteroidList.get(i);
+				g2d.drawImage(asteroid.getImage(), (int) asteroid.getX(), (int) asteroid.getY(), this);
 			}
 
 	}
@@ -120,17 +120,17 @@ public class GameBoard extends JPanel implements ActionListener {
 
 		count++;
 
-		//A new boulder is constructed every second (100 * DELAY = 1000ms = 1s)
+		//A new asteroid is constructed every second (100 * DELAY = 1000ms = 1s)
 		if(count % 100 == 0) {
 
-			newBoulder();
+			newAsteroid();
 		}
-
+		
 		//Calculate our x and y differentials based on the position relative to the mouse and move accordingly
 		spaceShip.calcDxDy(getMouseX(), getMouseY());		
 		spaceShip.move();
 
-		//These loops run through any and all missiles/boulders and moves them accordingly
+		//These loops run through any and all missiles/asteroids and moves them accordingly
 		if(!missileList.isEmpty()) {
 
 			int i = 0;
@@ -153,30 +153,30 @@ public class GameBoard extends JPanel implements ActionListener {
 			
 		}
 		
-		if(!boulderList.isEmpty()) {
+		if(!asteroidList.isEmpty()) {
 
 			int i = 0;
 			
-			while (i < boulderList.size()) {
+			while (i < asteroidList.size()) {
 				
-				Boulder boulder = boulderList.get(i);
+				Asteroid asteroid = asteroidList.get(i);
 
-				//Boulders bounce off the walls of the board rather than disappear
-				if(boulder.getX() < this.getX() || boulder.getX() + boulder.getWidth() > this.getX() + this.getWidth())
+				//asteroids bounce off the walls of the board rather than disappear
+				if(asteroid.getX() < this.getX() || asteroid.getX() + asteroid.getWidth() > this.getX() + this.getWidth())
 
-					boulder.bounceDx();
+					asteroid.bounceDx();
 					
-				if(boulder.getY() < this.getY() || boulder.getY() + boulder.getHeight() > this.getY() + this.getHeight())
+				if(asteroid.getY() < this.getY() || asteroid.getY() + asteroid.getHeight() > this.getY() + this.getHeight())
 					
-					boulder.bounceDy();
+					asteroid.bounceDy();
 				
 				int j = 0;
 				
 				while(j < missileList.size()) {
 					
-					if(boulder.hitSprite(missileList.get(j))) {
+					if(asteroid.hitSprite(missileList.get(j))) {
 						
-						boulderList.remove(i);
+						asteroidList.remove(i);
 						missileList.remove(j);
 						
 						continue;
@@ -186,15 +186,15 @@ public class GameBoard extends JPanel implements ActionListener {
 						
 				}
 				
-//				if(boulder.hitSprite(spaceShip)) {
-//					
-//					boulderList.remove(i);
-//					spaceShip.hit();
-//					
-//					continue;
-//				}
+				if(asteroid.hitSprite(spaceShip)) {
+					
+					spaceShip.hit();
+					//asteroidList.remove(i);
+					
+					//gameOver();
+				}
 				
-				boulder.move();
+				asteroid.move();
 
 				i++;
 					
@@ -213,19 +213,19 @@ public class GameBoard extends JPanel implements ActionListener {
 		missileList.add(e);
 	}
 
-	//Create a new boulder sprite in a random location on the game board
-	private void newBoulder() {
+	//Create a new asteroid sprite in a random location on the game board
+	private void newAsteroid() {
 
 		Random rndm = new Random();
 
-		Boulder b = new Boulder(rndm.nextInt(this.getWidth()) + this.getX(), rndm.nextInt(this.getHeight()) + this.getY());
+		Asteroid a = new Asteroid(rndm.nextInt(this.getWidth()) + this.getX(), rndm.nextInt(this.getHeight()) + this.getY());
 
-		//Error control loop for off-screen locations of boulders
-		while(!b.onScreen(this))
+		//Error control loop for off-screen locations of asteroids
+		while(!a.onScreen(this))
 		
-			b = new Boulder(rndm.nextInt(this.getWidth()) + this.getX(), rndm.nextInt(this.getHeight()) + this.getY());
+			a = new Asteroid(rndm.nextInt(this.getWidth()) + this.getX(), rndm.nextInt(this.getHeight()) + this.getY());
 		
-		boulderList.add(b);
+		asteroidList.add(a);
 		
 	}
 	
@@ -260,6 +260,13 @@ public class GameBoard extends JPanel implements ActionListener {
 
 	}
 
+	private void gameOver() {
+		
+		System.out.println("Oh no!  You've been hit!  Game Over!");
+		
+		System.exit(0);
+	}
+	
 	//Our MouseAdapter class controls various mouse events
 	private class MAdapter extends MouseAdapter {
 
