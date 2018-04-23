@@ -29,9 +29,36 @@ public class Asteroid extends Sprite {
 	
 	public boolean hitSprite(Sprite sprite) {
 	
-		return (sprite.getX() + sprite.getWidth() - x) * (sprite.getY() + sprite.getHeight() - y) >= 0.25 * sprite.getWidth() * sprite.getHeight();
+		if(sprite.getX() > x && sprite.getX() < x + w) {
 			
-	//	return false;
+			if(sprite.getY() > y && sprite.getY() < y + h) {
+				
+				return true;
+			}
+			
+			if(sprite.getY() + sprite.getHeight() > y && sprite.getY() + sprite.getHeight() < y + h) {
+				
+				return true;
+			}
+			
+		}
+		
+		if(sprite.getX() + sprite.getWidth() > x && sprite.getX() + sprite.getWidth() < x + w) {
+			
+
+			if(sprite.getY() > y && sprite.getY() < y + h) {
+				
+				return true;
+			}
+			
+			if(sprite.getY() + sprite.getHeight() > y && sprite.getY() + sprite.getHeight() < y + h) {
+				
+				return true;
+			}
+			
+		}
+		
+		return false;
 	}
 	
 }

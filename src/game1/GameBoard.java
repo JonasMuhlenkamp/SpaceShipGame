@@ -179,6 +179,8 @@ public class GameBoard extends JPanel implements ActionListener {
 						asteroidList.remove(i);
 						missileList.remove(j);
 						
+						j++;
+						
 						continue;
 					}
 
@@ -189,9 +191,11 @@ public class GameBoard extends JPanel implements ActionListener {
 				if(asteroid.hitSprite(spaceShip)) {
 					
 					spaceShip.hit();
-					//asteroidList.remove(i);
+					asteroidList.remove(i);
 					
-					//gameOver();
+					i++;
+					
+					continue;
 				}
 				
 				asteroid.move();
@@ -264,7 +268,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		
 		System.out.println("Oh no!  You've been hit!  Game Over!");
 		
-		System.exit(0);
+		System.exit(0);//need to put something else here.
 	}
 	
 	//Our MouseAdapter class controls various mouse events
