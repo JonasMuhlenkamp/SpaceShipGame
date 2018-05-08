@@ -139,7 +139,7 @@ public class GameBoard extends JPanel implements ActionListener {
 
 				Missile missile = missileList.get(i);
 
-				if(!missile.onScreen(this))
+				if(!onScreen(missile))
 
 					missileList.remove(i);
 
@@ -162,13 +162,9 @@ public class GameBoard extends JPanel implements ActionListener {
 				Asteroid asteroid = asteroidList.get(i);
 
 				//asteroids bounce off the walls of the board rather than disappear
-				if(asteroid.getX() < this.getX() || asteroid.getX() + asteroid.getWidth() > this.getX() + this.getWidth())
+				if((asteroid.getX() + asteroid.getWidth() < this.getX() || asteroid.getX() > this.getX() + this.getWidth()) && (asteroid.getY() + asteroid.getWidth() < this.getY() || asteroid.getY() > this.getY() + this.getHeight()))
 
-					asteroid.bounceDx();
-					
-				if(asteroid.getY() < this.getY() || asteroid.getY() + asteroid.getHeight() > this.getY() + this.getHeight())
-					
-					asteroid.bounceDy();
+					asteroidList.remove(i);
 				
 				int j = 0;
 				
@@ -179,9 +175,6 @@ public class GameBoard extends JPanel implements ActionListener {
 						asteroidList.remove(i);
 						missileList.remove(j);
 						
-						j++;
-						
-						continue;
 					}
 
 					j++;
@@ -210,6 +203,11 @@ public class GameBoard extends JPanel implements ActionListener {
 		repaint();    
 	}  
 
+	private boolean onScreen(Sprite sprite) {
+
+		return !(sprite.getX() < this.getX() || sprite.getX() + sprite.getWidth() > this.getX() + this.getWidth() || sprite.getY() < this.getY() || sprite.getY() + sprite.getHeight() > this.getY() + this.getHeight());
+	}
+	
 	private void fire() {
 
 		Missile e = new Missile(spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
@@ -225,7 +223,7 @@ public class GameBoard extends JPanel implements ActionListener {
 		Asteroid a = new Asteroid(rndm.nextInt(this.getWidth()) + this.getX(), rndm.nextInt(this.getHeight()) + this.getY());
 
 		//Error control loop for off-screen locations of asteroids
-		while(!a.onScreen(this))
+		while(!onScreen(a))
 		
 			a = new Asteroid(rndm.nextInt(this.getWidth()) + this.getX(), rndm.nextInt(this.getHeight()) + this.getY());
 		
@@ -253,15 +251,7 @@ public class GameBoard extends JPanel implements ActionListener {
 	//Checks if the mouse is currently on the board 
 	private boolean mouseOnBoard() {
 
-		if((this.getX() < getMouseX() && getMouseX() < this.getX() + this.getWidth()) && (this.getY() < getMouseY() && getMouseY() < this.getY() + this.getHeight())) {
-
-			return true;
-
-		} else {
-
-			return false;
-		}	
-
+		return (this.getX() < getMouseX() && getMouseX() < this.getX() + this.getWidth()) && (this.getY() < getMouseY() && getMouseY() < this.getY() + this.getHeight());
 	}
 
 	private void gameOver() {

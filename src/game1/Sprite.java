@@ -1,6 +1,5 @@
 package game1;
 
-import java.awt.Component;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -8,7 +7,6 @@ import javax.swing.ImageIcon;
 public class Sprite {
 
 	private Image image;
-	private String path;
 		
 	protected int w;
 	protected int h;
@@ -18,16 +16,25 @@ public class Sprite {
 	protected double dx;
 	protected double dy;
 	
+	protected Rectangle imageRect;
+	
 	public Sprite(String filename, double x, double y) {
 		
 		this.x = x;
 		this.y = y;
 		
-		path = filename;
-		loadImage();
+		loadImage(filename);
+	}
+	
+	public Sprite(String filename, Point center) {
+		
+		loadImage(filename);
+		
+		x = center.getX() - w / 2.0;
+		y = center.getY() - h / 2.0; 
 	}
 
-	private void loadImage() {
+	private void loadImage(String path) {
 
 		//Get the image icon and initialize image to it
 		ImageIcon ii = new ImageIcon(path);
@@ -36,48 +43,48 @@ public class Sprite {
 		//Get the image width and height (null means no other objects are waiting for the image to load)
 		w = image.getWidth(null);
 		h = image.getHeight(null);
+		
+		imageRect = new Rectangle(x, y, w, h);
 	}
 
 	public void move() {
 
 		x += dx;
-		y += dy;   
-	}
-	
-	public boolean onScreen(Component component) {
+		y += dy;
 		
-		if(x < component.getX() || x + w > component.getX() + component.getWidth() || y < component.getY() || y + h > component.getY() + component.getHeight()) {
-			
-			return false;
-		}
-		
-		return true;
+		imageRect.setX(x + dx);
+		imageRect.setY(y + dy);
 	}
 	
 	//Simple getter methods that return important attributes of the sprite
 	public double getX() {
 
-		return x;
+		return imageRect.getX();
 	}
 
 	public double getY() {
 
-		return y;
+		return imageRect.getY();
 	}
 
 	public int getWidth() {
 
-		return w;
+		return imageRect.getWidth();
 	}
 
 	public int getHeight() {
 
-		return h;
+		return imageRect.getHeight();
 	}    
 
 	public Image getImage() {
 
 		return image;
+	}
+	
+	public Rectangle getImageRectangle() {
+		
+		return imageRect;
 	}
 	
 }
