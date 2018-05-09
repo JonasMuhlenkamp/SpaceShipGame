@@ -56,6 +56,11 @@ public class Sprite {
 		imageRect.setY(y + dy);
 	}
 	
+	public boolean hitSprite(Sprite sprite) {
+		
+		return getImageRectangle().inRectangle(sprite);
+	}
+	
 	//Simple getter methods that return important attributes of the sprite
 	public double getX() {
 

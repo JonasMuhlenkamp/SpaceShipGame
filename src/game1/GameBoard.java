@@ -161,7 +161,7 @@ public class GameBoard extends JPanel implements ActionListener {
 				
 				Asteroid asteroid = asteroidList.get(i);
 
-				//asteroids bounce off the walls of the board rather than disappear
+				//asteroids bounce off the walls of the board rather than disappear (currently not true)
 				if((asteroid.getX() + asteroid.getWidth() < this.getX() || asteroid.getX() > this.getX() + this.getWidth()) && (asteroid.getY() + asteroid.getWidth() < this.getY() || asteroid.getY() > this.getY() + this.getHeight()))
 
 					asteroidList.remove(i);
