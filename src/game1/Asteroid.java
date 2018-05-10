@@ -3,13 +3,13 @@ package game1;
 import java.util.Random;
 
 public class Asteroid extends Sprite {
-
+	
+	public Random rndm = new Random();
+	
 	public Asteroid(double x, double y) {
 		
-		super("asteroid.png", x, y);
+		super("boulder.png", x, y);
 	
-		Random rndm = new Random();
-		
 		dx = -2 + rndm.nextInt(4); 
 		dy = -2 + rndm.nextInt(4);
 		
@@ -17,6 +17,7 @@ public class Asteroid extends Sprite {
 		
 	}
 
+	//These need fixing to bounce in a more random way
 	public void bounceDx() {
 		
 		dx *= -1.1;

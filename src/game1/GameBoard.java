@@ -108,7 +108,7 @@ public class GameBoard extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		//If the mouse is on the component, we step (move and repaint)
+		//If the mouse is on the JPanel, we step (move and repaint)
 		if(mouseOnBoard()) {
 
 			step();
@@ -162,10 +162,12 @@ public class GameBoard extends JPanel implements ActionListener {
 				Asteroid asteroid = asteroidList.get(i);
 
 				//asteroids bounce off the walls of the board rather than disappear (currently not true)
-				if((asteroid.getX() + asteroid.getWidth() < this.getX() || asteroid.getX() > this.getX() + this.getWidth()) && (asteroid.getY() + asteroid.getWidth() < this.getY() || asteroid.getY() > this.getY() + this.getHeight()))
+				if(!onScreen(asteroid)) {
 
-					asteroidList.remove(i);
-				
+					asteroid.bounceDx();
+					asteroid.bounceDy();
+				}
+								
 				int j = 0;
 				
 				while(j < missileList.size()) {
@@ -184,6 +186,7 @@ public class GameBoard extends JPanel implements ActionListener {
 				if(asteroid.hitSprite(spaceShip)) {
 					
 					spaceShip.hit();
+					spaceShip.destroy();
 					asteroidList.remove(i);
 					
 					i++;
@@ -253,13 +256,6 @@ public class GameBoard extends JPanel implements ActionListener {
 
 		return (this.getX() < getMouseX() && getMouseX() < this.getX() + this.getWidth()) && (this.getY() < getMouseY() && getMouseY() < this.getY() + this.getHeight());
 	}
-
-	private void gameOver() {
-		
-		System.out.println("Oh no!  You've been hit!  Game Over!");
-		
-		System.exit(0);//need to put something else here.
-	}
 	
 	//Our MouseAdapter class controls various mouse events
 	private class MAdapter extends MouseAdapter {
@@ -284,12 +280,11 @@ public class GameBoard extends JPanel implements ActionListener {
 		@Override
 		public void keyReleased(KeyEvent e) {
 
-			if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+			if(e.getKeyCode() == KeyEvent.VK_SPACE) 
 
 				fire();
-			}
-
 		}
+		
 	}
 
 }

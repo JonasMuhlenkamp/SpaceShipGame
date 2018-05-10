@@ -61,6 +61,13 @@ public class Sprite {
 		return getImageRectangle().inRectangle(sprite);
 	}
 	
+	public void destroy() {
+		
+		image = null;
+		x = Double.NaN;
+		y = Double.NaN;
+	}
+	
 	//Simple getter methods that return important attributes of the sprite
 	public double getX() {
 
