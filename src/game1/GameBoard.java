@@ -53,8 +53,13 @@ public class GameBoard extends JPanel implements ActionListener {
 		//Constructs a border layout for the JPanel
 		setLayout(new BorderLayout());
 
-		//This method configures the 'Game Paused' JLabel
-		configPauseScreen();
+		//Configures the 'Game Paused' JLabel
+		pauseScreen = new JLabel("Game Paused", JLabel.CENTER);
+		pauseScreen.setForeground(Color.RED);
+		pauseScreen.setFont(new Font("Serif", Font.PLAIN, 40));
+		pauseScreen.setVisible(false);
+
+		add(pauseScreen, BorderLayout.CENTER);
 
 		//Here we initialize the sprite we are using for the spaceship and the asteroid/missile ArrayLists
 		spaceShip = new Spaceship(60, 40);
@@ -66,32 +71,21 @@ public class GameBoard extends JPanel implements ActionListener {
 		timer.start();
 	}
 
-	//This method constructs the 'Game Paused' JLabel and adds it to the JPanel
-	private void configPauseScreen() {
-
-		pauseScreen = new JLabel("Game Paused", JLabel.CENTER);
-		pauseScreen.setForeground(Color.RED);
-		pauseScreen.setFont(new Font("Serif", Font.PLAIN, 40));
-		pauseScreen.setVisible(false);
-
-		add(pauseScreen, BorderLayout.CENTER);
-	}
-
 	public void paintComponent(Graphics g) {
 
 		Graphics2D g2d = (Graphics2D) g;
 
 		super.paintComponent(g2d);
 
-		g2d.drawImage(spaceShip.getImage(), (int) spaceShip.getX(), 
-				(int) spaceShip.getY(), this);
+		if(spaceShip.isVisible()) g2d.drawImage(spaceShip.getImage(), (int) spaceShip.getX(), (int) spaceShip.getY(), this);
 
 		if(!missileList.isEmpty())
 
 			for(int i = 0; i < missileList.size(); i++) {
 
 				Missile missile = missileList.get(i);
-				g2d.drawImage(missile.getImage(), (int) missile.getX(), (int) missile.getY(), this);
+				
+				if(missile.isVisible()) g2d.drawImage(missile.getImage(), (int) missile.getX(), (int) missile.getY(), this);
 			}
 
 		if(!asteroidList.isEmpty())
@@ -99,7 +93,7 @@ public class GameBoard extends JPanel implements ActionListener {
 			for(int i = 0; i < asteroidList.size(); i++) {
 
 				Asteroid asteroid = asteroidList.get(i);
-				g2d.drawImage(asteroid.getImage(), (int) asteroid.getX(), (int) asteroid.getY(), this);
+				if(asteroid.isVisible()) g2d.drawImage(asteroid.getImage(), (int) asteroid.getX(), (int) asteroid.getY(), this);
 			}
 
 	}
@@ -113,25 +107,19 @@ public class GameBoard extends JPanel implements ActionListener {
 
 			step();
 		}
-
 	}
 
 	private void step() {
 
-		count++;
-
 		//A new asteroid is constructed every second (100 * DELAY = 1000ms = 1s)
-		if(count % 100 == 0) {
-
-			newAsteroid();
-		}
+		count++;
+		if(count % 100 == 0) newAsteroid();
 		
-		//Calculate our x and y differentials based on the position relative to the mouse and move accordingly
-		spaceShip.calcDxDy(getMouseX(), getMouseY());		
-		spaceShip.move();
+		//Move the spaceship (it has a special move method that takes the mouse coordinates)
+		spaceShip.move(getMouseX(), getMouseY());
 
 		//These loops run through any and all missiles/asteroids and moves them accordingly
-		if(!missileList.isEmpty()) {
+		if(!missileList.isEmpty() && spaceShip.isVisible()) {
 
 			int i = 0;
 			
@@ -147,13 +135,12 @@ public class GameBoard extends JPanel implements ActionListener {
 					
 					missile.move();
 				
-				i++;
-				
+				i++;	
 			}
 			
 		}
 		
-		if(!asteroidList.isEmpty()) {
+		if(!asteroidList.isEmpty() && spaceShip.isVisible()) {
 
 			int i = 0;
 			
@@ -187,7 +174,7 @@ public class GameBoard extends JPanel implements ActionListener {
 					
 					spaceShip.hit();
 					spaceShip.destroy();
-					asteroidList.remove(i);
+					asteroid.destroy();
 					
 					i++;
 					
@@ -213,9 +200,11 @@ public class GameBoard extends JPanel implements ActionListener {
 	
 	private void fire() {
 
-		Missile e = new Missile(spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
-
-		missileList.add(e);
+		if(spaceShip.isVisible()) {
+			
+			Missile e = new Missile(spaceShip.getX() + spaceShip.getWidth() / 2.0, spaceShip.getY() + spaceShip.getHeight() / 2.0, getMouseX(), getMouseY());
+			missileList.add(e);
+		}
 	}
 
 	//Create a new asteroid sprite in a random location on the game board
